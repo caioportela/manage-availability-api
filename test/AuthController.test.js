@@ -33,13 +33,15 @@ describe('Auth Controller', () => {
     before(() => {
       return request.post('/professionals')
       .send({ professional: { firstName: 'Corey', lastName: 'Taylor' } })
-      .expect(201);
+      .expect(201)
+      .expect('Content-Type', /json/);
     });
 
     it('return a token', (done) => {
       request.post('/login')
       .send({ professional: 1 })
       .expect(200)
+      .expect('Content-Type', /json/)
       .end((err, res) => {
         if(err) { return done(err); }
 
