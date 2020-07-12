@@ -173,8 +173,17 @@ describe('Professional Controller', function() {
   });
 
   describe('DELETE /professionals/:id', function() {
-    it('return 204 after delete', function() {
-      request.delete(`/professionals/${professionalId}`).expect(204);
+    it('return 204 after delete', function(done) {
+      request.delete(`/professionals/${professionalId}`)
+      .expect(204)
+      .end(function(err, res) {
+        if(err) { return done(err); }
+
+        let body = Object.keys(res.body);
+        should(body.length).be.equal(0);
+
+        done();
+      });
     });
   });
 });
