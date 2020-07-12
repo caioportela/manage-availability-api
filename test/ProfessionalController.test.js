@@ -72,6 +72,20 @@ describe('Professional Controller', function() {
   });
 
   describe('GET /professionals', function() {
+    before(function() {
+      let professionals = [
+        { firstName: 'Aditi', lastName: 'Gibson' },
+        { firstName: 'Konnor', lastName: 'Ramsey' },
+        { firstName: 'Ilayda', lastName: 'Ali' },
+      ];
+
+      return Promise.all([
+        request.post('/professionals').send({ professional: professionals[0], }),
+        request.post('/professionals').send({ professional: professionals[1], }),
+        request.post('/professionals').send({ professional: professionals[2], }),
+      ]);
+    });
+
     it('return list of professionals', function(done) {
       request.get('/professionals')
       .expect('Content-Type', /json/)
@@ -83,6 +97,24 @@ describe('Professional Controller', function() {
 
         let { professionals } = res.body;
         should(professionals).be.Array();
+
+        done();
+      });
+    });
+
+    it('return max of 2 professionals', function(done) {
+      request.get('/professionals?limit=2&skip=2')
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .end(function(err, res) {
+        if(err) { return done(err); }
+
+        should.exist(res.body.professionals);
+
+        let { professionals } = res.body;
+
+        should(professionals).be.Array();
+        should(professionals.length).be.belowOrEqual(2);
 
         done();
       });

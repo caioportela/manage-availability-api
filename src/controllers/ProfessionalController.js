@@ -46,7 +46,7 @@ const ProfessionalController = {
   },
 
   async find(req, res) {
-    let { limit, skip, sort, ids, ...where } = req.query;
+    let { limit, skip, ...where } = req.query;
 
     let query = { };
 
@@ -56,14 +56,6 @@ const ProfessionalController = {
 
     if(skip) {
       query.offset = parseInt(skip);
-    }
-
-    if(sort) {
-      query.order = [sort.split(' ')];
-    }
-
-    if(ids) {
-      where.id = ids;
     }
 
     try {
