@@ -21,7 +21,6 @@ router.post('/login', AuthController.login);
 
 // Professional Controller
 router.get('/professionals', ProfessionalController.find);
-router.get('/professionals/token', ProfessionalController.token);
 router.get('/professionals/:id', ProfessionalController.findOne);
 router.post('/professionals', ProfessionalController.create);
 router.put('/professionals/:id', ProfessionalController.update);

@@ -64,7 +64,6 @@ describe('Professional Controller', function() {
         professionalId = professional.id;
         should.exist(professional.firstName);
         should.exist(professional.lastName);
-        should.exist(professional.token);
 
         done();
       });
@@ -146,24 +145,6 @@ describe('Professional Controller', function() {
         if(err) { return done(err); }
 
         should(res.text).be.equal('Professional not found\n');
-
-        done();
-      });
-    });
-  });
-
-  describe('GET /professionals/token', function() {
-    it('return token of the professionals', function(done) {
-      request.get('/professionals/token')
-      .expect('Content-Type', /json/)
-      .expect(200)
-      .end(function(err, res) {
-        if(err) { return done(err); }
-
-        should.exist(res.body.professionals);
-
-        let { professionals } = res.body;
-        should(professionals).be.Array();
 
         done();
       });

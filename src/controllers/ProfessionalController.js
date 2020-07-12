@@ -1,5 +1,4 @@
 const { Professional } = require('../loaders/models');
-const jwt = require('../utils/JWT');
 
 const ProfessionalController = {
   async create(req, res) {
@@ -19,10 +18,6 @@ const ProfessionalController = {
       }
 
       let professional = await Professional.create(body);
-
-      // Generate a token to mock an authentication
-      professional.token = jwt.sign({ professional: { id: professional.id } });
-      await professional.save();
 
       return res.created({ professional });
     } catch (e) {
@@ -79,18 +74,6 @@ const ProfessionalController = {
 
       return res.ok({ professional });
     } catch (e) {
-      return res.badRequest(e);
-    }
-  },
-
-  async token(req, res) {
-    try{
-      let professionals = await Professional.findAll({
-        attributes: ['id', 'token'],
-      });
-
-      return res.ok({ professionals });
-    } catch(e) {
       return res.badRequest(e);
     }
   },
