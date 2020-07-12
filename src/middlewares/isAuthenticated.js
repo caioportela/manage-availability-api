@@ -28,14 +28,18 @@ function isAuthenticated(req, res, next) {
   }
 
   jwt.verify(token, async (err, token) => {
-    if(err) { return res.unauthorized('Invalid token\n'); }
+    if(err || !token.professional) {
+      return res.unauthorized('Invalid token\n');
+    }
 
     const professional = await Professional.findOne({
       attributes: ['id'],
       where: { id: token.professional.id },
     });
 
-    if(!professional) { return res.unauthorized('Professional not found\n'); }
+    if(!professional) {
+      return res.unauthorized('Professional not found\n');
+    }
 
     req.professional = professional.get({ plain: true });
 
