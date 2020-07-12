@@ -2,14 +2,14 @@ const app = require('../app');
 const request = require('supertest')(app);
 const should = require('should');
 
-describe('Professional Controller', function() {
+describe('Professional Controller', () => {
   let professionalId;
 
-  describe('POST /professionals', function() {
-    it('should fail to create', function(done) {
+  describe('POST /professionals', () => {
+    it('should fail to create', (done) => {
       request.post('/professionals')
       .expect(400)
-      .end(function(err, res) {
+      .end((err, res) => {
         if(err) { return done(err); }
 
         should(res.text).be.equal('Object "professional" must be sent\n');
@@ -18,11 +18,11 @@ describe('Professional Controller', function() {
       });
     });
 
-    it('should fail to create without firstName', function(done) {
+    it('should fail to create without firstName', (done) => {
       request.post('/professionals')
       .send({ professional: { lastName: 'Church' }})
       .expect(400)
-      .end(function(err, res) {
+      .end((err, res) => {
         if(err) { return done(err); }
 
         should(res.text).be.equal('Professional must have a first name\n');
@@ -31,11 +31,11 @@ describe('Professional Controller', function() {
       });
     });
 
-    it('should fail to create without lastName', function(done) {
+    it('should fail to create without lastName', (done) => {
       request.post('/professionals')
       .send({ professional: { firstName: 'Carolina' }})
       .expect(400)
-      .end(function(err, res) {
+      .end((err, res) => {
         if(err) { return done(err); }
 
         should(res.text).be.equal('Professional must have a last name\n');
@@ -44,7 +44,7 @@ describe('Professional Controller', function() {
       });
     });
 
-    it('return the created professional', function(done) {
+    it('return the created professional', (done) => {
       let professional = {
         firstName: 'Eva',
         lastName: 'Mercer',
@@ -54,7 +54,7 @@ describe('Professional Controller', function() {
       .send({ professional })
       .expect('Content-Type', /json/)
       .expect(201)
-      .end(function(err, res) {
+      .end((err, res) => {
         if(err) { return done(err); }
 
         should.exist(res.body.professional);
@@ -70,8 +70,8 @@ describe('Professional Controller', function() {
     });
   });
 
-  describe('GET /professionals', function() {
-    before(function() {
+  describe('GET /professionals', () => {
+    before(() => {
       let professionals = [
         { firstName: 'Aditi', lastName: 'Gibson' },
         { firstName: 'Konnor', lastName: 'Ramsey' },
@@ -85,11 +85,11 @@ describe('Professional Controller', function() {
       ]);
     });
 
-    it('return list of professionals', function(done) {
+    it('return list of professionals', (done) => {
       request.get('/professionals')
       .expect('Content-Type', /json/)
       .expect(200)
-      .end(function(err, res) {
+      .end((err, res) => {
         if(err) { return done(err); }
 
         should.exist(res.body.professionals);
@@ -101,11 +101,11 @@ describe('Professional Controller', function() {
       });
     });
 
-    it('return max of 2 professionals', function(done) {
+    it('return max of 2 professionals', (done) => {
       request.get('/professionals?limit=2&skip=2')
       .expect('Content-Type', /json/)
       .expect(200)
-      .end(function(err, res) {
+      .end((err, res) => {
         if(err) { return done(err); }
 
         should.exist(res.body.professionals);
@@ -120,12 +120,12 @@ describe('Professional Controller', function() {
     });
   });
 
-  describe('GET /professionals/:id', function() {
-    it('return a professional', function(done) {
+  describe('GET /professionals/:id', () => {
+    it('return a professional', (done) => {
       request.get(`/professionals/${professionalId}`)
       .expect('Content-Type', /json/)
       .expect(200)
-      .end(function(err, res) {
+      .end((err, res) => {
         if(err) { return done(err); }
 
         should.exist(res.body.professional);
@@ -138,10 +138,10 @@ describe('Professional Controller', function() {
       });
     });
 
-    it('return 404 when not found', function(done) {
+    it('return 404 when not found', (done) => {
       request.get('/professionals/100')
       .expect(404)
-      .end(function(err, res) {
+      .end((err, res) => {
         if(err) { return done(err); }
 
         should(res.text).be.equal('Professional not found\n');
@@ -151,15 +151,15 @@ describe('Professional Controller', function() {
     });
   });
 
-  describe('PUT /professionals/:id', function() {
-    it('return the updated professional', function(done) {
+  describe('PUT /professionals/:id', () => {
+    it('return the updated professional', (done) => {
       let content = { firstName: 'Sam', lastName: 'Bridges' };
 
       request.put(`/professionals/${professionalId}`)
       .send({ professional: content })
       .expect('Content-Type', /json/)
       .expect(200)
-      .end(function(err, res) {
+      .end((err, res) => {
         if(err) { return done(err); }
 
         should.exist(res.body.professional);
@@ -172,10 +172,10 @@ describe('Professional Controller', function() {
       });
     });
 
-    it('should fail to update', function(done) {
+    it('should fail to update', (done) => {
       request.put(`/professionals/${professionalId}`)
       .expect(400)
-      .end(function(err, res) {
+      .end((err, res) => {
         if(err) { return done(err); }
 
         should(res.text).be.equal('Object "professional" must be sent\n');
@@ -185,11 +185,11 @@ describe('Professional Controller', function() {
     });
   });
 
-  describe('DELETE /professionals/:id', function() {
-    it('return 204 after delete', function(done) {
+  describe('DELETE /professionals/:id', () => {
+    it('return 204 after delete', (done) => {
       request.delete(`/professionals/${professionalId}`)
       .expect(204)
-      .end(function(err, res) {
+      .end((err, res) => {
         if(err) { return done(err); }
 
         let body = Object.keys(res.body);
