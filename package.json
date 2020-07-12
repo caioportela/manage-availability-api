@@ -1,0 +1,27 @@
+{
+  "name": "manage-availability-api",
+  "version": "0.0.0",
+  "description": "Zenklub backend challenge",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/caioportela/manage-availability-api.git"
+  },
+  "author": "Caio Portela",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/caioportela/manage-availability-api/issues"
+  },
+  "homepage": "https://github.com/caioportela/manage-availability-api#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "morgan": "^1.10.0",
+    "sequelize": "^6.3.3",
+    "sqlite3": "^5.0.0",
+    "winston": "^3.3.3"
+  }
+}
