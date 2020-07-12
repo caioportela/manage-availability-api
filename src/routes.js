@@ -9,9 +9,14 @@ const router = express.Router();
 const { isAuthenticated } = require('./middlewares');
 
 const {
+  AuthController,
   ProfessionalController,
   SessionController
 } = require('./controllers');
+
+
+// Auth Controller
+router.post('/login', AuthController.login);
 
 
 // Professional Controller
