@@ -28,11 +28,7 @@ router.delete('/professionals/:id', ProfessionalController.destroy);
 
 
 // Professional Controller
-router.get('/sessions', SessionController.find);
-router.get('/sessions/:id', SessionController.findOne);
-router.post('/sessions', SessionController.create);
-router.put('/sessions/:id', SessionController.update);
-router.delete('/sessions/:id', SessionController.destroy);
+router.post('/sessions', [isAuthenticated], SessionController.create);
 
 
 module.exports = (app) => app.use(router);
