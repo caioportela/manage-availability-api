@@ -12,8 +12,6 @@ const { Sequelize } = require('sequelize');
 const logger = require('../loaders/logger');
 const db = {};
 
-// let sequelize = new Sequelize('sqlite::memory:');
-// let sequelize = new Sequelize('sqlite://./databases/database.db');
 let sequelize = new Sequelize(databases[process.env.NODE_ENV || 'development']);
 
 const files = fs.readdirSync(modelsPath).filter((file) => {
