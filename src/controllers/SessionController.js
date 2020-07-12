@@ -66,6 +66,29 @@ const SessionController = {
       return res.badRequest(e);
     }
   },
+
+  async destroy(req, res) {
+    let professional = req.professional.id;
+
+    try {
+      let session = await Session.findOne({
+        where: {
+          professional,
+          id: req.params.id,
+        }
+      });
+
+      if(!session) {
+        return res.forbidden('You cannot remove sessions from others\n');
+      }
+
+      await session.destroy();
+
+      return res.noContent();
+    } catch (e) {
+      return res.badRequest(e);
+    }
+  },
 };
 
 module.exports = SessionController;

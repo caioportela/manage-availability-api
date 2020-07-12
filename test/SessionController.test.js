@@ -5,8 +5,9 @@ const moment = require('moment');
 const jwt = require('../src/utils/JWT');
 
 describe('Session Controller', () => {
+  let authorization;
+
   describe('POST /sessions', () => {
-    let authorization;
     let invalidToken = jwt.sign({ token: 'invalid-token' });
     let invalidProfessional = jwt.sign({ professional: { id: 500 } });
 
@@ -143,6 +144,7 @@ describe('Session Controller', () => {
       .set('Authorization', authorization)
       .send({ start, end })
       .expect(201)
+      .expect('Content-Type', /json/)
       .end((err, res) => {
         if(err) { return done(err); }
 
@@ -172,6 +174,64 @@ describe('Session Controller', () => {
 
         should.not.exist(res.body.sessions);
         should(res.text).be.equal('There are sessions in this interval. Available from 09h30\n');
+
+        done();
+      });
+    });
+  });
+
+  describe('DELETE /sessions/:id', () => {
+    let otherPro;
+
+    it('should fail without Authorization', (done) => {
+      request.delete('/sessions/3')
+      .expect(401)
+      .end((err, res) => {
+        if(err) { return done(err); }
+
+        should(res.text).be.equal('Authorization credentials not informed\n');
+
+        done();
+      });
+    });
+
+    it('return 204 after delete', (done) => {
+      request.delete(`/sessions/1`)
+      .set('Authorization', authorization)
+      .expect(204)
+      .end((err, res) => {
+        if(err) { return done(err); }
+
+        let body = Object.keys(res.body);
+        should(body.length).be.equal(0);
+
+        done();
+      });
+    });
+
+    before((done) => {
+      request.post('/login')
+      .send({ professional: 3 })
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .end((err, res) => {
+        if(err) { return done(err); }
+
+        should.exist(res.body.token);
+        otherPro = `Bearer ${res.body.token}`;
+
+        done();
+      });
+    });
+
+    it('should fail if from another professional', (done) => {
+      request.delete('/sessions/3')
+      .set('Authorization', otherPro)
+      .expect(403)
+      .end((err, res) => {
+        if(err) { return done(err); }
+
+        should(res.text).be.equal('You cannot remove sessions from others\n');
 
         done();
       });

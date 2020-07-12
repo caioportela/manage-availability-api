@@ -29,6 +29,7 @@ router.delete('/professionals/:id', ProfessionalController.destroy);
 
 // Professional Controller
 router.post('/sessions', [isAuthenticated], SessionController.create);
+router.delete('/sessions/:id', [isAuthenticated], SessionController.destroy);
 
 
 module.exports = (app) => app.use(router);
