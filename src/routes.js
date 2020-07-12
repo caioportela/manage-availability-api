@@ -6,6 +6,8 @@
 const express = require('express');
 const router = express.Router();
 
+const { isAuthenticated } = require('./middlewares');
+
 const {
   ProfessionalController,
   SessionController
@@ -14,6 +16,7 @@ const {
 
 // Professional Controller
 router.get('/professionals', ProfessionalController.find);
+router.get('/professionals/token', ProfessionalController.token);
 router.get('/professionals/:id', ProfessionalController.findOne);
 router.post('/professionals', ProfessionalController.create);
 router.put('/professionals/:id', ProfessionalController.update);

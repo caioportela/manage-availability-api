@@ -1,4 +1,5 @@
 const logger = require('../loaders/logger');
+const jwt = require('../utils/JWT');
 const { Professional } = require('../loaders/models');
 
 const ProfessionalController = {
@@ -19,6 +20,10 @@ const ProfessionalController = {
       }
 
       let professional = await Professional.create(body);
+
+      // Generate a token to mock an authentication
+      professional.token = jwt.sign({ professional: { id: professional.id } });
+      await professional.save();
 
       return res.created({ professional });
     } catch (e) {
@@ -91,6 +96,19 @@ const ProfessionalController = {
     }
   },
 
+  async token(req, res) {
+    try{
+      let professionals = await Professional.findAll({
+        attributes: ['id', 'token'],
+      });
+
+      return res.ok({ professionals });
+    } catch(e) {
+      logger.error(`ProfessionalController :: tokens\n${e}`);
+      return res.badRequest(e);
+    }
+  },
+
   async update(req, res) {
     try {
       let body = req.body.professional;
@@ -103,7 +121,10 @@ const ProfessionalController = {
         where: { id: req.params.id }
       });
 
-      await professional.update(body);
+      await professional.update({
+        ...body,
+        token: professional.token
+      });
 
       return res.ok({ professional });
     } catch (e) {
