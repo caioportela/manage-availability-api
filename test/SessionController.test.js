@@ -237,4 +237,38 @@ describe('Session Controller', () => {
       });
     });
   });
+
+  describe('GET /sessions', () => {
+    it('return list of sessions', (done) => {
+      request.get('/sessions')
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .end((err, res) => {
+        if(err) { return done(err); }
+
+        should.exist(res.body.sessions);
+        should(res.body.sessions).be.Array();
+
+        done();
+      });
+    });
+
+    it('return max of 2 sessions', (done) => {
+      request.get('/sessions?limit=2&skip=2')
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .end((err, res) => {
+        if(err) { return done(err); }
+
+        should.exist(res.body.sessions);
+
+        let { sessions } = res.body;
+
+        should(sessions).be.Array();
+        should(sessions.length).be.belowOrEqual(2);
+
+        done();
+      });
+    });
+  });
 });

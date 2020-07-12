@@ -89,6 +89,31 @@ const SessionController = {
       return res.badRequest(e);
     }
   },
+
+  async find(req, res) {
+    let { limit, skip, ...where } = req.query;
+
+    let query = { };
+
+    if(limit) {
+      query.limit = parseInt(limit);
+    }
+
+    if(skip) {
+      query.offset = parseInt(skip);
+    }
+
+    try {
+      let sessions = await Session.findAll({
+        ...query,
+        where,
+      });
+
+      return res.ok({ sessions });
+    } catch (e) {
+      return res.badRequest(e);
+    }
+  },
 };
 
 module.exports = SessionController;
