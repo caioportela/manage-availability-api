@@ -1,6 +1,5 @@
-const logger = require('../loaders/logger');
-const jwt = require('../utils/JWT');
 const { Professional } = require('../loaders/models');
+const jwt = require('../utils/JWT');
 
 const ProfessionalController = {
   async create(req, res) {
@@ -27,7 +26,6 @@ const ProfessionalController = {
 
       return res.created({ professional });
     } catch (e) {
-      logger.error(`ProfessionalController :: create\n${e}`);
       return res.badRequest(e);
     }
   },
@@ -40,7 +38,6 @@ const ProfessionalController = {
 
       return res.noContent();
     } catch (e) {
-      logger.error(`ProfessionalController :: destroy\n${e}`);
       return res.badRequest(e);
     }
   },
@@ -66,7 +63,6 @@ const ProfessionalController = {
 
       return res.ok({ professionals });
     } catch (e) {
-      logger.error(`ProfessionalController :: find\n${e}`);
       return res.badRequest(e);
     }
   },
@@ -83,7 +79,6 @@ const ProfessionalController = {
 
       return res.ok({ professional });
     } catch (e) {
-      logger.error(`ProfessionalController :: findOne\n${e}`);
       return res.badRequest(e);
     }
   },
@@ -96,7 +91,6 @@ const ProfessionalController = {
 
       return res.ok({ professionals });
     } catch(e) {
-      logger.error(`ProfessionalController :: tokens\n${e}`);
       return res.badRequest(e);
     }
   },
@@ -120,7 +114,6 @@ const ProfessionalController = {
 
       return res.ok({ professional });
     } catch (e) {
-      logger.error(`ProfessionalController :: update\n${e}`);
       return res.badRequest(e);
     }
   },
