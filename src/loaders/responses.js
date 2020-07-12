@@ -24,7 +24,6 @@ files.forEach((file) => {
 function generateFormatsForRes(req, res, next) {
   for(let title in formatters) {
     const formatter = formatters[title];
-    logger.debug(`Loading Response Formatter: ${title}`);
     res[title] = formatter.bind({ res });
   }
 
