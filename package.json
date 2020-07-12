@@ -4,8 +4,9 @@
   "description": "Zenklub backend challenge",
   "main": "app.js",
   "scripts": {
+    "coverage": "nyc npm test",
     "start": "node app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "NODE_ENV=test mocha --exit --require mocha-clean"
   },
   "repository": {
     "type": "git",
@@ -19,9 +20,17 @@
   "homepage": "https://github.com/caioportela/manage-availability-api#readme",
   "dependencies": {
     "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
     "morgan": "^1.10.0",
     "sequelize": "^6.3.3",
     "sqlite3": "^5.0.0",
     "winston": "^3.3.3"
+  },
+  "devDependencies": {
+    "mocha": "^8.0.1",
+    "mocha-clean": "^1.0.0",
+    "nyc": "^15.1.0",
+    "should": "^13.2.3",
+    "supertest": "^4.0.2"
   }
 }

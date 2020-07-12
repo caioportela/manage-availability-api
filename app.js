@@ -22,6 +22,12 @@ require('./src/routes')(app);
 app.use(morgan('dev'));
 app.set('json spaces', 2);
 
-const server = app.listen(3000, () => {
-  logger.info('App listening at port %s', server.address().port);
-});
+if (process.env.NODE_ENV && process.env.NODE_ENV === 'test') {
+  logger.info(`Exposing app as module for testing`);
+  logger.level = 'info';
+  module.exports = app;
+} else {
+  const server = app.listen(3000, () => {
+    logger.info('App listening at port %s', server.address().port);
+  });
+}

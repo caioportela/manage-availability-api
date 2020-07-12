@@ -7,8 +7,8 @@ const databases = {
   },
   test: {
     dialect: 'sqlite',
-    storage: '../databases/test.db',
-    host: 'localhost',
+    storage: ':memory:',
+    logging: false,
     define: { charset: 'utf8', timestamps: true },
   },
 };
