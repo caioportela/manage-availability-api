@@ -40,7 +40,7 @@ or
 $ node app.js
 ```
 
-The application is now running at `http://localhost3000`
+The application is now running at `http://localhost:3000`
 
 In this documentation all requests will be made through cURL
 but also it can be done by using [Postman](https://www.postman.com/)
