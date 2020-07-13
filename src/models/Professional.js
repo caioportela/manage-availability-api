@@ -8,6 +8,14 @@ class Professional extends Model {
     }, {
       sequelize,
       tableName: 'professional',
+
+      defaultScope: {
+        // Remove attributes from default query
+        // https://sequelize.org/v5/manual/scopes.html
+        attributes: {
+          exclude: ['createdAt', 'updatedAt']
+        },
+      },
     });
   }
 }

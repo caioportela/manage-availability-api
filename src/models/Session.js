@@ -10,6 +10,14 @@ class Session extends Model {
     }, {
       sequelize,
       tableName: 'session',
+
+      defaultScope: {
+        // Remove attributes from default query
+        // https://sequelize.org/v5/manual/scopes.html
+        attributes: {
+          exclude: ['createdAt', 'updatedAt']
+        },
+      },
     });
   }
 
