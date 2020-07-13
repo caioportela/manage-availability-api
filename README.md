@@ -246,7 +246,7 @@ A single slot can be retrieved with `GET /sessions/:id`
 
 - Request
   ```bash
-  $ curl  http://localhost:3000/sessions/3
+  $ curl http://localhost:3000/sessions/3
   ```
 
 - Response
