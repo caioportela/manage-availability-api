@@ -8,14 +8,14 @@ In order to allow professionals to manage their availability they need a system 
 - [Installation](#installation)
 - [Usage](#usage)
   - [List all professionals](#get-professionals)
-  - [Find a especific professional](#get-professionalsid)
-  - [Add a professional](#post-professionals)
-  - [Remove a professional](#delete-professionalsid)
   - [List all professional slots in a range of time](#get-sessions)
-  - [Find a especific slot](#get-sessionsid)
   - [List all slots available in a range of time](#get-sessionsavailable)
   - [Set professional availability](#post-sessions)
-  - [Book session](#put-sessionsidschedule)
+  - [Book a session](#put-sessionsidschedule)
+  - [Find a specific professional](#get-professionalsid)
+  - [Find a specific slot](#get-sessionsid)
+  - [Add a professional](#post-professionals)
+  - [Remove a professional](#delete-professionalsid)
   - [Remove session](#delete-sessionsid)
   - [Authentication](#post-login)
 - [Test](#test)
@@ -75,74 +75,6 @@ A list of all professionals can be retrieved with `GET /professionals`
 
 -------------------------------------------------------------------------------
 
-### `GET /professionals/:id`
-A especific professional can be retrieved with `GET /professionals/:id`
-
-- Request
-  ```bash
-  $ curl http://localhost:3000/professionals/1
-  ```
-
-- Response
-  ```json
-  {
-    "professional": {
-      "id": 1,
-      "firstName": "Erica",
-      "lastName": "Sargent"
-    }
-  }
-  ```
--------------------------------------------------------------------------------
-
-### `POST /professionals`
-
-Professionals can be added via `POST /professionals`
-
-- Headers
-  - `Content-Type: application/json`
-
-- Body
-  ```json
-  {
-    "professional": {
-      "firstName": "Kianna",
-      "lastName": "Robson"
-    }
-  }
-  ```
-
-- Request
-  ```bash
-  $ curl -X POST http://localhost:3000/professionals -H 'Content-Type:application/json' -d '{"professional":{"firstName":"Kianna","lastName":"Robson"}}'
-  ```
-
-- Response
-
-  ```json
-  {
-    "professional": {
-      "id": 3,
-      "firstName": "Kianna",
-      "lastName": "Robson",
-      "updatedAt": "2020-07-13T13:20:36.609Z",
-      "createdAt": "2020-07-13T13:20:36.609Z"
-    }
-  }
-  ```
-
--------------------------------------------------------------------------------
-
-### `DELETE /professionals/:id`
-A professional can be removed with `DELETE /professionals/:id`
-
-- Request
-  ```bash
-  $ curl -X DELETE http://localhost3000/professionals/4
-  ```
-
--------------------------------------------------------------------------------
-
 ### `GET /sessions`
 A list with all professional slots in a range of time can be retrieved with `GET /sessions`.
 
@@ -180,30 +112,6 @@ slots will be displayed.
         "professional": 1
       }
     ]
-  }
-  ```
-
--------------------------------------------------------------------------------
-
-### `GET /sessions/:id`
-A single slot can be retrieved with `GET /sessions/:id`
-
-- Request
-  ```bash
-  $ curl  http://localhost:3000/sessions/3
-  ```
-
-- Response
-  ```json
-  {
-    "session": {
-      "id": 3,
-      "booked": false,
-      "customer": null,
-      "end": "2020-07-15T12:30:00.000Z",
-      "start": "2020-07-15T12:00:00.000Z",
-      "professional": 1
-    }
   }
   ```
 
@@ -262,6 +170,7 @@ has been booked, then the 8AM session will not be available anymore because it's
     ]
   }
   ```
+
 -------------------------------------------------------------------------------
 
 ### `POST /sessions`
@@ -311,6 +220,99 @@ A customer can book sessions with `PUT /sessions/:id/schedule`
 
 -------------------------------------------------------------------------------
 
+### `GET /professionals/:id`
+A especific professional can be retrieved with `GET /professionals/:id`
+
+- Request
+  ```bash
+  $ curl http://localhost:3000/professionals/1
+  ```
+
+- Response
+  ```json
+  {
+    "professional": {
+      "id": 1,
+      "firstName": "Erica",
+      "lastName": "Sargent"
+    }
+  }
+  ```
+
+-------------------------------------------------------------------------------
+
+### `GET /sessions/:id`
+A single slot can be retrieved with `GET /sessions/:id`
+
+- Request
+  ```bash
+  $ curl  http://localhost:3000/sessions/3
+  ```
+
+- Response
+  ```json
+  {
+    "session": {
+      "id": 3,
+      "booked": false,
+      "customer": null,
+      "end": "2020-07-15T12:30:00.000Z",
+      "start": "2020-07-15T12:00:00.000Z",
+      "professional": 1
+    }
+  }
+  ```
+
+-------------------------------------------------------------------------------
+
+### `POST /professionals`
+
+Professionals can be added via `POST /professionals`
+
+- Headers
+  - `Content-Type: application/json`
+
+- Body
+  ```json
+  {
+    "professional": {
+      "firstName": "Kianna",
+      "lastName": "Robson"
+    }
+  }
+  ```
+
+- Request
+  ```bash
+  $ curl -X POST http://localhost:3000/professionals -H 'Content-Type:application/json' -d '{"professional":{"firstName":"Kianna","lastName":"Robson"}}'
+  ```
+
+- Response
+
+  ```json
+  {
+    "professional": {
+      "id": 3,
+      "firstName": "Kianna",
+      "lastName": "Robson",
+      "updatedAt": "2020-07-13T13:20:36.609Z",
+      "createdAt": "2020-07-13T13:20:36.609Z"
+    }
+  }
+  ```
+
+-------------------------------------------------------------------------------
+
+### `DELETE /professionals/:id`
+A professional can be removed with `DELETE /professionals/:id`
+
+- Request
+  ```bash
+  $ curl -X DELETE http://localhost3000/professionals/4
+  ```
+
+-------------------------------------------------------------------------------
+
 ### `DELETE /sessions/:id`
 *This endpoint requires a token that can be generated using [`POST /login`](#post-login)*
 
@@ -349,7 +351,7 @@ The token for the authentication can be retrieved with `POST /login`
   {
     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9mZXNzaW9uYWwiOnsiaWQiOjF9LCJpYXQiOjE1OTQ2NTIwMTh9.l1WJK4SceKXaEqtO-YE0caFvtw-S3ZxqK2-q1nxtMFE"
   }
-    ```
+  ```
 
 -------------------------------------------------------------------------------
 
