@@ -273,6 +273,31 @@ describe('Session Controller', () => {
         done();
       });
     });
+
+    it('return list of all slots in a range of time', (done) => {
+      request.get('/sessions?start=2020-07-15 08:00:00&end=2020-07-15 11:00:00')
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .end((err, res) => {
+        if(err) { return done(err); }
+
+        should.exist(res.body.sessions);
+
+        let { sessions } = res.body;
+
+        should(sessions).be.Array();
+
+        sessions.forEach((session) => {
+          let start = moment(session.start);
+          let end = moment(session.end);
+
+          should(start.isSameOrAfter('2020-07-15 08:00:00')).be.true();
+          should(end.isSameOrBefore('2020-07-15 11:00:00')).be.true();
+        });
+
+        done();
+      });
+    });
   });
 
   describe('GET /sessions/:id', () => {

@@ -91,7 +91,7 @@ const SessionController = {
   },
 
   async find(req, res) {
-    let { limit, skip, ...where } = req.query;
+    let { limit, skip, start, end, ...where } = req.query;
 
     let query = { };
 
@@ -101,6 +101,14 @@ const SessionController = {
 
     if(skip) {
       query.offset = parseInt(skip);
+    }
+
+    if(start && end) {
+      start = moment(start);
+      end = moment(end);
+
+      where.start = { [Op.gte]: start.toDate() };
+      where.end = { [Op.lte]: end.toDate() };
     }
 
     try {
