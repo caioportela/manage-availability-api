@@ -114,6 +114,22 @@ const SessionController = {
       return res.badRequest(e);
     }
   },
+
+  async findOne(req, res) {
+    try {
+      let session = await Session.findOne({
+        where: { id: req.params.id },
+      });
+
+      if(!session) {
+        return res.notFound('Session not found\n');
+      }
+
+      return res.ok({ session });
+    } catch (e) {
+      return res.badRequest(e);
+    }
+  },
 };
 
 module.exports = SessionController;

@@ -158,6 +158,9 @@ describe('Session Controller', () => {
         sessions.forEach((session) => {
           should(session.start).be.equal(start.toISOString());
           should(session.end).be.equal(start.add(30, 'minutes').toISOString());
+
+          let duration = moment(session.end).diff(moment(session.start), 'minutes');
+          should(duration).be.equal(30);
         });
 
         done();
@@ -266,6 +269,38 @@ describe('Session Controller', () => {
 
         should(sessions).be.Array();
         should(sessions.length).be.belowOrEqual(2);
+
+        done();
+      });
+    });
+  });
+
+  describe('GET /sessions/:id', () => {
+    it('should fail if not find a session', (done) => {
+      request.get('/sessions/1000')
+      .expect(404)
+      .end((err, res) => {
+        if(err) { return done(err); }
+
+        should.not.exist(res.body.session);
+        should(res.text).be.equal('Session not found\n');
+
+        done();
+      });
+    });
+
+    it('return a session', (done) => {
+      request.get('/sessions/3')
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .end((err, res) => {
+        if(err) { return done(err); }
+
+        should.exist(res.body.session);
+        let { start, end } = res.body.session;
+
+        let duration = moment(end).diff(moment(start), 'minutes');
+        should(duration).be.equal(30);
 
         done();
       });

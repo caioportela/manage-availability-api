@@ -29,6 +29,7 @@ router.delete('/professionals/:id', ProfessionalController.destroy);
 
 // Professional Controller
 router.get('/sessions', SessionController.find);
+router.get('/sessions/:id', SessionController.findOne);
 router.post('/sessions', [isAuthenticated], SessionController.create);
 router.delete('/sessions/:id', [isAuthenticated], SessionController.destroy);
 
