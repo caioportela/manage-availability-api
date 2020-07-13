@@ -306,4 +306,93 @@ describe('Session Controller', () => {
       });
     });
   });
+
+  describe('GET /sessions/available', () => {
+    before(() => {
+      let sessions = [
+        { start: '2020-07-13 13:00:00', end: '2020-07-13 18:00:00' },
+        { start: '2020-07-15 08:00:00', end: '2020-07-15 11:30:00' },
+        { start: '2020-07-15 14:00:00', end: '2020-07-15 17:00:00' },
+        { start: '2020-07-16 09:00:00', end: '2020-07-16 12:00:00' },
+        { start: '2020-07-18 14:45:00', end: '2020-07-18 17:45:00' },
+      ];
+
+      let tokens = [
+        jwt.sign({ professional: { id: 1 } }),
+        jwt.sign({ professional: { id: 3 } }),
+        jwt.sign({ professional: { id: 4 } }),
+        jwt.sign({ professional: { id: 5 } }),
+      ];
+
+      return Promise.all([
+        request.post('/sessions').set('Authorization', `Bearer ${tokens[0]}`).send(sessions[3]),
+        request.post('/sessions').set('Authorization', `Bearer ${tokens[1]}`).send(sessions[1]),
+        request.post('/sessions').set('Authorization', `Bearer ${tokens[1]}`).send(sessions[2]),
+        request.post('/sessions').set('Authorization', `Bearer ${tokens[1]}`).send(sessions[4]),
+        request.post('/sessions').set('Authorization', `Bearer ${tokens[2]}`).send(sessions[3]),
+        request.post('/sessions').set('Authorization', `Bearer ${tokens[2]}`).send(sessions[4]),
+        request.post('/sessions').set('Authorization', `Bearer ${tokens[3]}`).send(sessions[0]),
+        request.post('/sessions').set('Authorization', `Bearer ${tokens[4]}`).send(sessions[1]),
+      ]);
+    });
+
+    it('return list of sessions available', (done) => {
+      request.get('/sessions/available')
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .end((err, res) => {
+        if(err) { return done(err); }
+
+        should.exist(res.body.sessions);
+
+        let { sessions } = res.body;
+        should(sessions).be.Array();
+
+        sessions.forEach((session) => {
+          should(session.booked).be.false();
+          should.not.exist(session.createdAt);
+          should.not.exist(session.updatedAt);
+        });
+
+        done();
+      });
+    });
+
+    it('should return only sessions by the professional 1', (done) => {
+      request.get('/sessions/available?professional=1')
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .end((err, res) => {
+        if(err) { return done(err); }
+
+        should.exist(res.body.sessions);
+
+        let { sessions } = res.body;
+        should(sessions).be.Array();
+
+        sessions.forEach((session) => {
+          should(session.professional).be.equal(1);
+        });
+
+        done();
+      });
+    });
+
+    it('should return only sessions within the range of time', (done) => {
+      request.get('/sessions/available?start=2020-07-15 08:00:00&end=2020-07-15 11:00:00')
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .end((err, res) => {
+        if(err) { return done(err); }
+
+        should.exist(res.body.sessions);
+
+        let { sessions } = res.body;
+        should(sessions).be.Array();
+        should(sessions.length).be.equal(5);
+
+        done();
+      });
+    });
+  });
 });

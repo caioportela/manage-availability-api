@@ -115,6 +115,62 @@ const SessionController = {
     }
   },
 
+  async findAvailable(req, res) {
+    try {
+      let { professional, start, end } = req.query;
+
+      let where = { booked: false };
+
+      if(professional) {
+        where.professional = professional;
+      }
+
+      if(start && end) {
+        start = moment(start);
+        end = moment(end);
+
+        where.start = { [Op.gte]: start.toDate() };
+        where.end = { [Op.lte]: end.toDate() };
+      }
+
+      let sessions = await Session.findAll({
+        where,
+        attributes: {
+          exclude: ['createdAt', 'updatedAt'],
+        },
+        order: [['start', 'ASC']],
+      });
+
+      // Map which professionals have sessions
+      let mapProfessionals = sessions.map(o => o.professional);
+      mapProfessionals = [...new Set(mapProfessionals)];
+
+      let availableSessions = [];
+
+      // Group sessions by professional
+      mapProfessionals.forEach((pro) => {
+        let available = sessions.filter(o => o.professional === pro);
+
+        // At least 2 sessions are needed to show available
+        if(available.length === 1) { return; }
+
+        for(let i = 0; i < available.length - 1; i++) {
+          let currentStart = moment(available[i].start);
+          let nextStart = moment(available[i+1].start);
+
+          // If interval to next available session is 30 minutes, then show available
+          if(nextStart.diff(currentStart, 'minutes') === 30) {
+            availableSessions.push(available[i]);
+          }
+        }
+      });
+
+      return res.ok({ sessions: availableSessions });
+    } catch (e) {
+      return res.badRequest(e);
+    }
+  },
+
   async findOne(req, res) {
     try {
       let session = await Session.findOne({
