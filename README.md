@@ -1,8 +1,25 @@
-
-
 # manage-availability-api
 
 In order to allow professionals to manage their availability they need a system that manages slots of time
+
+## Table of Contents
+
+<!-- toc -->
+- [Installation](#installation)
+- [Usage](#usage)
+  - [`GET /professionals`](#get-professionals)
+  - [`GET /professionals/:id`](#get-professionalsid)
+  - [`POST /professionals`](#post-professionals)
+  - [`DELETE /professionals/:id`](#delete-professionalsid)
+  - [`GET /sessions`](#get-sessions)
+  - [`GET /sessions/:id`](#get-sessionsid)
+  - [`GET /sessions/available`](#get-sessionsavailable)
+  - [`POST /sessions`](#post-sessions)
+  - [`DELETE /sessions/:id`](#delete-sessionsid)
+  - [`PUT /sessions/:id/schedule`](#put-sessionsidschedule)
+  - [`POST /login`](#post-login)
+- [Test](#test)
+<!-- tocstop -->
 
 ## Installation
 
