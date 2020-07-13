@@ -7,17 +7,17 @@ In order to allow professionals to manage their availability they need a system 
 <!-- toc -->
 - [Installation](#installation)
 - [Usage](#usage)
-  - [`GET /professionals`](#get-professionals)
-  - [`GET /professionals/:id`](#get-professionalsid)
-  - [`POST /professionals`](#post-professionals)
-  - [`DELETE /professionals/:id`](#delete-professionalsid)
-  - [`GET /sessions`](#get-sessions)
-  - [`GET /sessions/:id`](#get-sessionsid)
-  - [`GET /sessions/available`](#get-sessionsavailable)
-  - [`POST /sessions`](#post-sessions)
-  - [`DELETE /sessions/:id`](#delete-sessionsid)
-  - [`PUT /sessions/:id/schedule`](#put-sessionsidschedule)
-  - [`POST /login`](#post-login)
+  - [List all professionals](#get-professionals)
+  - [Find a especific professional](#get-professionalsid)
+  - [Add a professional](#post-professionals)
+  - [Remove a professional](#delete-professionalsid)
+  - [List all professional slots in a range of time](#get-sessions)
+  - [Find a especific slot](#get-sessionsid)
+  - [List all slots available in a range of time](#get-sessionsavailable)
+  - [Set professional availability](#post-sessions)
+  - [Book session](#put-sessionsidschedule)
+  - [Remove session](#delete-sessionsid)
+  - [Authentication](#post-login)
 - [Test](#test)
 <!-- tocstop -->
 
@@ -291,24 +291,6 @@ Only professionals can create sessions
 
 -------------------------------------------------------------------------------
 
-### `DELETE /sessions/:id`
-*This endpoint requires a token that can be generated using [`POST /login`](#post-login)*
-
-A session can be removed with `DELETE /sessions/:id`
-
-A session can only be removed by its creator
-
-- Headers
-  - `Authorization: 'Bearer <token>'`
-
-- Request
-  ```bash
-  $ curl -X DELETE http://localhost:3000/sessions/1 -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9mZXNzaW9uYWwiOnsiaWQiOjF9LCJpYXQiOjE1OTQ2NTIwMTh9.l1WJK4SceKXaEqtO-YE0caFvtw-S3ZxqK2-q1nxtMFE'
-
-  ```
-
--------------------------------------------------------------------------------
-
 ### `PUT /sessions/:id/schedule`
 A customer can book sessions with `PUT /sessions/:id/schedule`
 
@@ -326,6 +308,25 @@ A customer can book sessions with `PUT /sessions/:id/schedule`
   ```bash
   $ curl -X PUT http://localhost:3000/sessions/2/schedule -H 'Content-Type:application/json' -d '{"customer": "Sara Wheatley"}'
   ```
+
+-------------------------------------------------------------------------------
+
+### `DELETE /sessions/:id`
+*This endpoint requires a token that can be generated using [`POST /login`](#post-login)*
+
+A session can be removed with `DELETE /sessions/:id`
+
+A session can only be removed by its creator
+
+- Headers
+  - `Authorization: 'Bearer <token>'`
+
+- Request
+  ```bash
+  $ curl -X DELETE http://localhost:3000/sessions/1 -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9mZXNzaW9uYWwiOnsiaWQiOjF9LCJpYXQiOjE1OTQ2NTIwMTh9.l1WJK4SceKXaEqtO-YE0caFvtw-S3ZxqK2-q1nxtMFE'
+
+  ```
+
 -------------------------------------------------------------------------------
 
 ### `POST /login`
@@ -349,3 +350,17 @@ The token for the authentication can be retrieved with `POST /login`
     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9mZXNzaW9uYWwiOnsiaWQiOjF9LCJpYXQiOjE1OTQ2NTIwMTh9.l1WJK4SceKXaEqtO-YE0caFvtw-S3ZxqK2-q1nxtMFE"
   }
     ```
+
+-------------------------------------------------------------------------------
+
+## Test
+
+To run tests simply run:
+```bash
+$ npm test
+```
+
+For coverage:
+```bash
+$ npm run coverage
+```
