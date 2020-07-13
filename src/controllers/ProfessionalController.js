@@ -77,29 +77,6 @@ const ProfessionalController = {
       return res.badRequest(e);
     }
   },
-
-  async update(req, res) {
-    try {
-      let body = req.body.professional;
-
-      if(!body) {
-        throw 'Object "professional" must be sent\n';
-      }
-
-      let professional = await Professional.findOne({
-        where: { id: req.params.id }
-      });
-
-      await professional.update({
-        ...body,
-        token: professional.token
-      });
-
-      return res.ok({ professional });
-    } catch (e) {
-      return res.badRequest(e);
-    }
-  },
 };
 
 module.exports = ProfessionalController;

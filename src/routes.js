@@ -23,7 +23,6 @@ router.post('/login', AuthController.login);
 router.get('/professionals', ProfessionalController.find);
 router.get('/professionals/:id', ProfessionalController.findOne);
 router.post('/professionals', ProfessionalController.create);
-router.put('/professionals/:id', ProfessionalController.update);
 router.delete('/professionals/:id', ProfessionalController.destroy);
 
 

@@ -151,40 +151,6 @@ describe('Professional Controller', () => {
     });
   });
 
-  describe('PUT /professionals/:id', () => {
-    it('return the updated professional', (done) => {
-      let content = { firstName: 'Sam', lastName: 'Bridges' };
-
-      request.put(`/professionals/${professionalId}`)
-      .send({ professional: content })
-      .expect('Content-Type', /json/)
-      .expect(200)
-      .end((err, res) => {
-        if(err) { return done(err); }
-
-        should.exist(res.body.professional);
-
-        let { professional } = res.body;
-        should(professional.firstName).be.equal('Sam');
-        should(professional.lastName).be.equal('Bridges');
-
-        done();
-      });
-    });
-
-    it('should fail to update', (done) => {
-      request.put(`/professionals/${professionalId}`)
-      .expect(400)
-      .end((err, res) => {
-        if(err) { return done(err); }
-
-        should(res.text).be.equal('Object "professional" must be sent\n');
-
-        done();
-      });
-    });
-  });
-
   describe('DELETE /professionals/:id', () => {
     it('return 204 after delete', (done) => {
       request.delete(`/professionals/${professionalId}`)
