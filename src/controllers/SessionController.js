@@ -194,6 +194,54 @@ const SessionController = {
       return res.badRequest(e);
     }
   },
+
+  async schedule(req, res) {
+    try {
+      let customer = req.body.customer;
+
+      if(!customer) {
+        throw 'Customer must be sent\n';
+      }
+
+      let period1 = await Session.findOne({
+        where: { id: req.params.id },
+      });
+
+      if(!period1) {
+        return res.notFound('Session not found\n');
+      }
+
+      if(period1.booked) {
+        return res.forbidden('Session not available\n');
+      }
+
+      let start = moment(period1.start).add(30, 'minutes').toDate();
+
+      let period2 = await Session.findOne({
+        where: {
+          start,
+          booked: false,
+          professional: period1.professional,
+        }
+      });
+
+      if(!period2) {
+        throw 'Session not available\n';
+      }
+
+      period1.customer = customer;
+      period2.customer = customer;
+
+      period1.booked = true;
+      period2.booked = true;
+
+      await Promise.all([period1.save(), period2.save()]);
+
+      return res.ok({ sessions: [period1, period2] });
+    } catch (e) {
+      return res.badRequest(e);
+    }
+  }
 };
 
 module.exports = SessionController;

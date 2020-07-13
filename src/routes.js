@@ -27,11 +27,12 @@ router.put('/professionals/:id', ProfessionalController.update);
 router.delete('/professionals/:id', ProfessionalController.destroy);
 
 
-// Professional Controller
+// Session Controller
 router.get('/sessions', SessionController.find);
 router.get('/sessions/available', SessionController.findAvailable);
 router.get('/sessions/:id', SessionController.findOne);
 router.post('/sessions', [isAuthenticated], SessionController.create);
+router.put('/sessions/:id/schedule', SessionController.schedule);
 router.delete('/sessions/:id', [isAuthenticated], SessionController.destroy);
 
 

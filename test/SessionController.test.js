@@ -332,7 +332,9 @@ describe('Session Controller', () => {
     });
   });
 
-  describe('GET /sessions/available', () => {
+  describe('PUT /sessions/:id/schedule', () => {
+    let sessionsId;
+
     before(() => {
       let sessions = [
         { start: '2020-07-13 13:00:00', end: '2020-07-13 18:00:00' },
@@ -351,7 +353,12 @@ describe('Session Controller', () => {
 
       return Promise.all([
         request.post('/sessions').set('Authorization', `Bearer ${tokens[0]}`).send(sessions[3]),
-        request.post('/sessions').set('Authorization', `Bearer ${tokens[1]}`).send(sessions[1]),
+        request.post('/sessions').set('Authorization', `Bearer ${tokens[1]}`).send(sessions[1])
+        .then((res) => {
+          should.exist(res.body.sessions);
+          should(res.body.sessions).be.Array();
+          sessionsId = res.body.sessions.map(o => o.id);
+        }),
         request.post('/sessions').set('Authorization', `Bearer ${tokens[1]}`).send(sessions[2]),
         request.post('/sessions').set('Authorization', `Bearer ${tokens[1]}`).send(sessions[4]),
         request.post('/sessions').set('Authorization', `Bearer ${tokens[2]}`).send(sessions[3]),
@@ -361,6 +368,86 @@ describe('Session Controller', () => {
       ]);
     });
 
+    it('should fail without customer', (done) => {
+      request.put('/sessions/1/schedule')
+      .expect(400)
+      .end((err, res) => {
+        if(err) { return done(err); }
+
+        should.not.exist(res.body.sessions);
+        should(res.text).be.equal('Customer must be sent\n');
+
+        done();
+      });
+    });
+
+    it('should fail when not found', (done) => {
+      request.put('/sessions/1000/schedule')
+      .expect(404)
+      .send({ customer: 'Helen Whittle' })
+      .end((err, res) => {
+        if(err) { return done(err); }
+
+        should.not.exist(res.body.sessions);
+        should(res.text).be.equal('Session not found\n');
+
+        done();
+      });
+    });
+
+    it('should fail when last session', (done) => {
+      request.put('/sessions/3/schedule')
+      .expect(400)
+      .send({ customer: 'Helen Whittle' })
+      .end((err, res) => {
+        if(err) { return done(err); }
+
+        should.not.exist(res.body.sessions);
+        should(res.text).be.equal('Session not available\n');
+
+        done();
+      });
+    });
+
+    it('return (OK) when session is booked', (done) => {
+      request.put(`/sessions/${sessionsId[1]}/schedule`)
+      .send({ customer: 'Helen Whittle' })
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .end((err, res) => {
+        if(err) { return done(err); }
+
+        should.exist(res.body.sessions);
+
+        let { sessions } = res.body;
+        should(sessions).be.Array();
+        should(sessions.length).be.equal(2);
+
+        sessions.forEach((session) => {
+          should(session.booked).be.true();
+          should(session.customer).be.equal('Helen Whittle');
+        });
+
+        done();
+      });
+    });
+
+    it('should fail when not available', (done) => {
+      request.put(`/sessions/${sessionsId[2]}/schedule`)
+      .send({ customer: 'Kimberley Pitt' })
+      .expect(403)
+      .end((err, res) => {
+        if(err) { return done(err); }
+
+        should.not.exist(res.body.sessions);
+        should(res.text).be.equal('Session not available\n');
+
+        done();
+      });
+    });
+  });
+
+  describe('GET /sessions/available', () => {
     it('return list of sessions available', (done) => {
       request.get('/sessions/available')
       .expect('Content-Type', /json/)
@@ -414,7 +501,7 @@ describe('Session Controller', () => {
 
         let { sessions } = res.body;
         should(sessions).be.Array();
-        should(sessions.length).be.equal(5);
+        should(sessions.length).be.equal(2);
 
         done();
       });
